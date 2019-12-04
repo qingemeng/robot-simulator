@@ -1,5 +1,8 @@
 defmodule RobotSimulator do
   alias Robot
+
+  @directions  [:north, :east, :south, :west]
+
   @doc """
   Create a Robot Simulator given an initial direction and position.
 
@@ -7,7 +10,19 @@ defmodule RobotSimulator do
   """
   @spec create(direction :: atom, position :: {integer, integer}) :: any
   def create(direction \\ :north, position \\ {0, 0}) do
-    Robot.new(direction, position)
+    with :ok <- validate_direction(direction) do
+      Robot.new(direction, position)
+    else
+      err -> err
+    end
+  end
+
+  defp validate_direction(direction) do
+    if Enum.member?(@directions, direction) do
+      :ok
+    else
+      {:error, "invalid direction"}
+    end
   end
 
   @doc """
