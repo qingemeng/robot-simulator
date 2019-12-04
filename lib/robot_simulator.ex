@@ -10,10 +10,9 @@ defmodule RobotSimulator do
   """
   @spec create(direction :: atom, position :: {integer, integer}) :: any
   def create(direction \\ :north, position \\ {0, 0}) do
-    with :ok <- validate_direction(direction) do
+    with :ok <- validate_direction(direction),
+         :ok <- validate_position(position) do
       Robot.new(direction, position)
-    else
-      err -> err
     end
   end
 
@@ -23,6 +22,14 @@ defmodule RobotSimulator do
     else
       {:error, "invalid direction"}
     end
+  end
+
+  defp validate_position({x, y}) when is_number(x) and is_number(y) do
+    :ok
+  end
+
+  defp validate_position(_) do
+    {:error, "invalid position"}
   end
 
   @doc """
