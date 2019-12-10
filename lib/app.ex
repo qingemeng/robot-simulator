@@ -20,7 +20,7 @@ defmodule App do
           [commands, robot],
           fn c, [rest, robot] ->
             if length(rest) > 0 do
-              robot = Robot.execute(robot, c)
+              robot = execute_command(robot, room, c)
               [_ | rest] = rest
               {:cont, [rest, robot]}
             else
@@ -33,5 +33,9 @@ defmodule App do
     else
       error -> error
     end
+  end
+
+  defp execute_command(robot, room, command) do
+    if !Robot.hit_border(robot, room, command), do: Robot.execute(robot, command), else: robot
   end
 end

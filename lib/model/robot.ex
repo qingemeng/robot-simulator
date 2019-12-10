@@ -47,4 +47,13 @@ defmodule Robot do
   defp rotate(:east, "R"), do: :south
   defp rotate(:south, "R"), do: :west
   defp rotate(:west, "R"), do: :north
+
+  def hit_border(robot, room, "A") do
+    %{direction: direction, x: x, y: y} = execute(robot, "A")
+    %{width: max_x, height: max_y} = room
+
+    x >= max_x or y >= max_y
+  end
+
+  def hit_border(_, _, _), do: false
 end
