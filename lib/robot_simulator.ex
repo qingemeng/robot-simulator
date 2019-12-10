@@ -39,8 +39,33 @@ defmodule RobotSimulator do
   """
   @spec simulate(robot :: any, instructions :: String.t()) :: any
   def simulate(robot, instructions) do
+    instructions
+    |> String.graphemes()
+    |> Enum.each(fn (c) -> command(c, robot) end)
   end
 
+  def command("L", robot) do
+    cur_index = Enum.find_index(@directions, fn i -> i == direction(robot) end)
+    new_direction = Enum.at(@directions, rem((cur_index + 1), 4))
+    Map.put(robot, :direction, new_direction)
+  end
+
+  def command("R", robot) do
+    cur_index = Enum.find_index(@directions, fn i -> i == direction(robot) end)
+    new_direction = Enum.at(@directions, rem((cur_index - 1), 4))
+    Map.put(robot, :direction, new_direction)
+  end
+
+  def command("A", robot) do
+    cur_pos = position(robot)
+
+    case direction(robot) do
+      :north -> Map.put(robot, :position, {elem(cur_pos, 0), elem(cur_pos, 1)+1})
+      :east -> Map.put(robot, :position, {elem(cur_pos, 0) +1 , elem(cur_pos, 1)})
+#      :south -> Map.put(robot, :position, {elem(cur_pos, 0), elem(cur_pos, 1)-1})
+#      :west -> Map.put(robot, :position, {elem(cur_pos, 0) -1 , elem(cur_pos, 1)})
+    end
+  end
   @doc """
   Return the robot's direction.
 
