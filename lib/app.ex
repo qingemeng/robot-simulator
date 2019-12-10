@@ -8,6 +8,10 @@ defmodule App do
   #  robot = Robot.new()
   #  commands = ""
 
+  def run(robots, room, instruction) when is_list(robots) do
+
+  end
+
   def run(robot, room, instruction) do
     commands =
       instruction
