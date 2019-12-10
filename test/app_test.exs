@@ -37,7 +37,11 @@ defmodule AppTest do
       Robot.new()
       |> App.run(room, "AA")
 
-    assert result == {:ok, %Robot{direction: :north, x: 0, y: 1}}
+    assert result == {
+             :ok,
+             %Robot{direction: :north, x: 0, y: 1},
+             %Room{blocks: [%{x: 0, y: 1}], height: 2, width: 2}
+           }
   end
 
   test "run/3" do
@@ -47,7 +51,11 @@ defmodule AppTest do
       Robot.new(:south, 8, 4)
       |> App.run(room, "LAAARRRALLLL")
 
-    assert r3 == {:ok, %Robot{direction: :north, x: 11, y: 5}}
+    assert r3 == {
+             :ok,
+             %Robot{direction: :north, x: 11, y: 5},
+             %Room{blocks: [%{x: 11, y: 5}], height: 20, width: 20}
+           }
   end
 
   test "execute_command" do

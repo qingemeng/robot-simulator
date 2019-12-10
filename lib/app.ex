@@ -29,7 +29,7 @@ defmodule App do
           end
         )
 
-      {:ok, robot}
+      {:ok, robot, room}
     else
       error -> error
     end
