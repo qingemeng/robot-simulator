@@ -19,6 +19,7 @@ defmodule Robot do
 
   def execute(robot, command) when command == "L" or command == "R" do
     %{direction: direction, x: x, y: y} = robot
+
     %__MODULE__{
       direction: rotate(direction, command),
       x: x,
@@ -29,6 +30,7 @@ defmodule Robot do
   def execute(robot, "A") do
     %{direction: direction, x: x, y: y} = robot
     [x_move, y_move] = @forward_map[direction]
+
     %__MODULE__{
       direction: direction,
       x: x + x_move,
