@@ -32,7 +32,7 @@ defmodule AppTest do
   end
 
   test "run does not move robot when it hits the border" do
-    room = Room.new(2,2)
+    room = Room.new(2, 2)
     result =
       Robot.new()
       |> App.run(room, "AA")
@@ -43,22 +43,35 @@ defmodule AppTest do
   test "run/3" do
     room = Room.new(20, 20)
 
-#    r1 =
-#      Robot.new()
-#      |> App.run(room, "LAAARALA")
-#
-#    assert r1 == {:ok, %Robot{direction: :west, x: -4, y: 1}}
-#
-#    r2 =
-#      Robot.new(:east, 2, -7)
-#      |> App.run(room, "RRAAAAALA")
-#
-#    assert r2 == {:ok, %Robot{direction: :south, x: -3, y: -8}}
-
     r3 =
       Robot.new(:south, 8, 4)
       |> App.run(room, "LAAARRRALLLL")
 
     assert r3 == {:ok, %Robot{direction: :north, x: 11, y: 5}}
   end
+
+  test "execute_command" do
+    robot = Robot.new(:north, 0, 0)
+    new_robot = Robot.new(:north, 0, 1)
+
+    room = Room.new(2, 2, [%{x: 0, y: 0}])
+    new_room = Room.new(2, 2, [%{x: 0, y: 1}])
+
+    assert [new_robot, new_room] == App.execute_command(robot, room, "A")
+  end
+
+  test "execute_command does not change robot or room when hits border" do
+    robot = Robot.new(:north, 0, 1)
+    room = Room.new(2, 2, [%{x: 0, y: 0}])
+
+    assert [robot, room] == App.execute_command(robot, room, "A")
+  end
+
+  test "execute_command does not change robot or room when hits block" do
+    robot = Robot.new(:north, 0, 0)
+    room = Room.new(2, 2, [%{x: 0, y: 1}])
+
+    assert [robot, room] == App.execute_command(robot, room, "A")
+  end
+
 end

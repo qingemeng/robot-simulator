@@ -14,17 +14,17 @@ defmodule App do
       |> String.graphemes()
 
     with :ok <- Validation.validate_commands(commands) do
-      [_, robot] =
+      [_, robot, room] =
         Enum.reduce_while(
           commands,
-          [commands, robot],
-          fn c, [rest, robot] ->
+          [commands, robot, room],
+          fn c, [rest, robot, room] ->
             if length(rest) > 0 do
-              robot = execute_command(robot, room, c)
+              [robot, room] = execute_command(robot, room, c)
               [_ | rest] = rest
-              {:cont, [rest, robot]}
+              {:cont, [rest, robot, room]}
             else
-              {:halt, [rest, robot]}
+              {:halt, [rest, robot, room]}
             end
           end
         )
@@ -35,7 +35,15 @@ defmodule App do
     end
   end
 
-  defp execute_command(robot, room, command) do
-    if !Robot.hit_border(robot, room, command), do: Robot.execute(robot, command), else: robot
+  def execute_command(robot, room, command) do
+    if Robot.hit_border(robot, room, command) or Robot.hit_block(robot, room, command) do
+      [robot, room]
+    else
+      new_robot = Robot.execute(robot, command)
+      room = room
+             |> Room.release(robot.x, robot.y)
+             |> Room.occupy(new_robot.x, new_robot.y)
+      [new_robot, room]
+    end
   end
 end

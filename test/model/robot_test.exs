@@ -42,7 +42,7 @@ defmodule RobotTest do
     end
   end
 
-  describe "hit_border/1" do
+  describe "hit_border/3" do
     test "hits border" do
       room = Room.new(2,2)
       robot = Robot.new(:north, 1, 1)
@@ -54,6 +54,21 @@ defmodule RobotTest do
       robot = Robot.new(:north, 1, 1)
       refute Robot.hit_border(robot, room, "L")
       refute Robot.hit_border(robot, room, "R")
+    end
+  end
+
+  describe "hit_block/3" do
+    test "hits border" do
+      room = Room.new(2,2, [%{x: 0, y: 1}])
+      robot = Robot.new(:north, 0, 0)
+      assert Robot.hit_block(robot, room, "A")
+    end
+
+    test "does not hit border when rotating" do
+      room = Room.new(2,2, [%{x: 0, y: 1}])
+      robot = Robot.new(:north, 0, 0)
+      refute Robot.hit_block(robot, room, "L")
+      refute Robot.hit_block(robot, room, "R")
     end
   end
 end
